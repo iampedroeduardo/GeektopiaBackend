@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Produto{
+  id Int @id @default(autoincrement())
+  descricao String
+  saldo Int
+  custo Float
+  venda Float
+  imagem String
+  categoriaId Int
+  temaId Int
+  categoria Categoria @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  tema Tema @relation(fields: [temaId], references: [id], onDelete: Cascade)
+  carrinho Carrinho[]
+  vendas VendaItens[]
+}
+
+model Usuario{
+  id Int @id @default(autoincrement())
+  email String @unique
+  nome String
+  senha String
+  enderecos Endereco[]
+  carrinho Carrinho[]
+  vendas Venda[]
+}
+
+model Endereco{
+  id Int @id @default(autoincrement())
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId Int
+  cep String
+  rua String
+  bairro String
+  cidade String
+  numero String
+  uf String
+  vendas Venda[]
+}
+
+model Carrinho{
+  id Int @id @default(autoincrement())
+  produtoId Int
+  usuarioId Int
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  quantidade Int
+}
+
+model Venda{
+  id Int @id @default(autoincrement())
+  usuarioId Int
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  formapagamento String
+  itens VendaItens[]
+  enderecoId Int
+  endereco Endereco @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
+}
+
+model VendaItens{
+  id Int @id @default(autoincrement())
+  vendaId Int
+  produtoId Int
+  venda Venda @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  quantidade Int
+}
+
+model Categoria{
+  id Int @id @default(autoincrement())
+  nome String
+  produtos Produto[]
+}
+
+model Tema{
+  id Int @id @default(autoincrement())
+  nome String
+  produtos Produto[]
+}
