@@ -24,6 +24,53 @@ module.exports = {
             res.status(500).json({ error: 'Erro ao cadastrar usuário' });
         }
     },
+    /* 
+    ------------CADASTROS-----------
+    CADASTRAR TEMA
+    async cadastrarTema(req, res) {
+        try {
+            const { nome } = req.body;
+            const novoTema = await prisma.tema.create({
+                data: { nome }
+            });
+            res.status(201).json(novoTema);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+    },
+
+    CADASTRAR CATEGORIA
+    async cadastrarCategoria(req, res) {
+        try {
+            const { nome } = req.body;
+            const novaCategoria = await prisma.categoria.create({
+                data: { nome }
+            });
+            res.status(201).json(novaCategoria);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+    },
+    
+    CADASTRAR ENDEREÇO
+    async cadastrarEndereco(req, res) {
+        try {
+            const { cep, rua, bairro, cidade, numero, uf, usuarioId } = req.body;
+            const novoEndereco = await prisma.endereco.create({
+                data: { cep, rua, bairro, cidade, numero, uf, usuarioId }
+            });
+            res.status(201).json(novoEndereco);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+    },
+    
+    ------------LISTAGENS-----------
+
+    */
+
+
+
     async buscarUsuario (req, res) {
         try{
             const { email, senha } = req.body;
@@ -70,19 +117,6 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar carrinho' });
         }    
-    },
-    async produtosPorCategoria(req, res) {
-        try {
-            const { id } = req.params;
-            const produtos = await prisma.produto.findMany({
-                where: {
-                    categoriaId: Number(id)
-                }
-            })
-            res.status(200).json(produtos);
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar carrinho' });
-        }
     },
     async produtosPorCategoria(req, res) {
         try {
