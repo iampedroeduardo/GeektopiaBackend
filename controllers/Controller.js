@@ -24,9 +24,6 @@ module.exports = {
             res.status(500).json({ error: 'Erro ao cadastrar usuário' });
         }
     },
-    /* 
-    ------------CADASTROS-----------
-    CADASTRAR TEMA
     async cadastrarTema(req, res) {
         try {
             const { nome } = req.body;
@@ -38,8 +35,6 @@ module.exports = {
             res.status(500).json({ error: 'Erro ao cadastrar usuário' });
         }
     },
-
-    CADASTRAR CATEGORIA
     async cadastrarCategoria(req, res) {
         try {
             const { nome } = req.body;
@@ -51,8 +46,6 @@ module.exports = {
             res.status(500).json({ error: 'Erro ao cadastrar usuário' });
         }
     },
-    
-    CADASTRAR ENDEREÇO
     async cadastrarEndereco(req, res) {
         try {
             const { cep, rua, bairro, cidade, numero, uf, usuarioId } = req.body;
@@ -64,12 +57,6 @@ module.exports = {
             res.status(500).json({ error: 'Erro ao cadastrar usuário' });
         }
     },
-    
-    ------------LISTAGENS-----------
-
-    */
-
-
 
     async buscarUsuario (req, res) {
         try{
@@ -145,5 +132,98 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error: "Erro ao listar proprietário por nome" })
         }
-    }
+    },
+    async colocarNoCarrinho(req, res) {
+        try {
+            const { usuarioId, produtoId, quantidade } = req.body;
+            const novoItem = await prisma.carrinho.create({
+                data: { usuarioId, produtoId, quantidade }
+            });
+            res.status(201).json(novoItem);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+    },
+    async realizarVenda(req, res) {
+        try {
+            const { usuarioId, formapagamento, enderecoId } = req.body;
+            const novaVenda = await prisma.venda.create({
+                data: { usuarioId, formapagamento, enderecoId }
+            });
+            res.status(201).json(novaVenda);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+    },
+    /*async vendaItens(req, res) {
+        try {
+            const { vendaId, produtoId, quantidade } = req.body;
+            const novaVendaItem = await prisma.vendaItens.create({
+                data: { vendaId, produtoId, quantidade }
+            });
+            res.status(201).json(novaVendaItem);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+        try {
+            const { produtoId } = req.body;
+            const produto = await prisma.produto.findMany({
+                where: {
+                    id: Number(produtoId)
+                }
+            });
+            produto.saldo -= quantidade;
+            const novosaldo = await prisma.produto.update({
+                where: { id: Number(produtoId) },
+                data: { saldo: produto.saldo }
+            });
+            res.status(201).json(novosaldo);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+        }
+        
+    },*/
+    async buscarVendas (req, res) {
+        try {
+            const {id} = req.params;
+            const vendas = await prisma.venda.findMany({
+                where:{
+                    usuarioId:Number(id)
+                }
+            })
+            res.status(200).json(vendas);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar carrinho' });
+        }
+    },
+    async buscarItensVenda (req, res) {
+        try {
+            const {id} = req.params;
+            const itens = await prisma.vendaItens.findMany({
+                where:{
+                    vendaId:Number(id)
+                }
+            })
+            res.status(200).json(itens);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar carrinho' });
+        }
+    },
+    async atualizarTema (req, res) {
+        try {
+            const {id} = req.params;
+            const {nome} = req.params.body;
+            const tema = await prisma.tema.update({
+                where:{
+                    id:Number(id)
+                },
+                data:{
+                    nome
+                }
+            })
+            res.status(200).json(tema);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar carrinho' });
+        }
+    },
 };
